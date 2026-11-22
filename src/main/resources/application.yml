@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: fee-rewrite-verify
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:ccdev}${DB_SCHEMA_PARAM:}
+    username: ${DB_USER:ccdev}
+    password: ${DB_PASS:ccdev}
+    hikari:
+      maximum-pool-size: 8
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    schemas: ${FLYWAY_SCHEMA:public}
+    default-schema: ${FLYWAY_SCHEMA:public}
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: ${PORT:8080}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs
+
+# 改写验证服务自身参数
+verify:
+  # 政策切换月份（跨期过滤诊断依据），逗号分隔
+  policy-switch-months: "2026-01"
+  # 影子执行器资源限制
+  shadow:
+    statement-timeout-ms: 15000
+    lock-timeout-ms: 5000
+    work-mem: 16MB
+  # 路由接口单次返回的最大明细行数（完整行数在 rowCount 中体现）
+  router:
+    max-return-rows: 200

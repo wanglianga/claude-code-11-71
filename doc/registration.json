@@ -1,0 +1,15 @@
+{
+  "sqlText": "SELECT d.id, d.org_code, o.org_name, d.diagnosis_code, d.drug_code, d.settle_status, d.amount, d.settle_date\nFROM snap_fee_detail d\nJOIN snap_dim_org o ON o.org_code = d.org_code\nJOIN snap_dim_drug g ON g.drug_code = d.drug_code\nWHERE to_char(d.settle_date, 'YYYY-MM') BETWEEN :monthFrom AND :monthTo\n  AND (:orgCode IS NULL OR d.org_code = :orgCode)\n  AND (:settleStatus IS NULL OR d.settle_status = :settleStatus)\n  AND (:diagPrefix IS NULL OR d.diagnosis_code LIKE :diagPrefix || '%')\nORDER BY d.id",
+  "purpose": "月结费用明细稽核查询（稽核/病种付费/预算共用）",
+  "authScope": {"roles": ["AUDIT", "DRG", "BUDGET"], "orgCodes": ["*"]},
+  "paramShape": [
+    {"name": "monthFrom", "type": "STRING", "nullable": false, "pattern": "^\\d{4}-\\d{2}$"},
+    {"name": "monthTo", "type": "STRING", "nullable": false, "pattern": "^\\d{4}-\\d{2}$"},
+    {"name": "orgCode", "type": "STRING", "nullable": true},
+    {"name": "settleStatus", "type": "STRING", "nullable": true, "enum": ["SETTLED", "PENDING", "REJECTED"]},
+    {"name": "diagPrefix", "type": "STRING", "nullable": true},
+    {"name": "pageSize", "type": "INT", "nullable": true},
+    {"name": "pageOffset", "type": "INT", "nullable": true}
+  ],
+  "createdBy": "manual-curl"
+}

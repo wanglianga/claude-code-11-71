@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/ccdev?currentSchema=verify_it
+    username: ccdev
+    password: ccdev
+  flyway:
+    schemas: verify_it
+    default-schema: verify_it
